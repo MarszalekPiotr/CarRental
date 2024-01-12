@@ -1,4 +1,4 @@
-﻿using CarRental.Models;
+﻿using CarRental.DataBase.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
