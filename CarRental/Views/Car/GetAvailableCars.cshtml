@@ -1,14 +1,31 @@
 ﻿@model IEnumerable<CarRental.DTO.AvailableCarViewModel>
-
+@using Microsoft.AspNetCore.Identity
 @{
     ViewData["Title"] = "GetAvailableCars";
 }
+@inject SignInManager<Client> SignInManager
+@inject UserManager<Client> UserManager
+
+@{
+    bool isLogged = SignInManager.IsSignedIn(User);
+    bool isAdmin = false;
+    if (isLogged)
+    {
+        Client user = await UserManager.FindByNameAsync(User.Identity.Name);
+        isAdmin = await UserManager.IsInRoleAsync(user, "Admin");
+    }
+}
+
 
 <h1>GetAvailableCars</h1>
+@if (isAdmin)
+{
+    
+        
+        @Html.ActionLink("Dodaj Samochód", "AddCar","Car",  new { @class = "btn btn-primary" })
+   
+}
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -56,13 +73,23 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
-                <a asp-action="Edit"  asp-route-id="@item.Id">Edit</a> |
+            <td>    
+                   
+                    
+                    @if (isLogged) {
+                        @if (isAdmin)
+                        {
+                            @Html.ActionLink("Zaktualizuj dane", "UpdateCar","Car", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("Usuń ", "Delete","Car", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                        }
+                        @Html.ActionLink("Dodaj Opinie", "AddReview","Review", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Wypożycz", "Rent","Rental", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                    }
                     @Html.ActionLink("Szczegóły i recenzje", "Details","Car", new { CarId = item.Id }, new { @class = "btn btn-primary" })
-                    @Html.ActionLink("Usuń ", "Delete","Car", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                    
            @*      <a asp-action="AddReview" asp-controller = "Review" asp-route-id="@item.Id">Dodaj Opinie</a>*@
-                    @Html.ActionLink("Dodaj Opinie", "AddReview","Review", new { CarId = item.Id }, new { @class = "btn btn-primary" })
-                    @Html.ActionLink("Wypożycz", "Rent","Rental", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                    
+                    
             </td>
 
         </tr>

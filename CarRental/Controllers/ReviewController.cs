@@ -1,5 +1,6 @@
 ﻿using CarRental.DataBase.Models;
 using CarRental.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,7 @@ namespace CarRental.Controllers
 
         // Oblusżyc niezalogowaneo uzytjownia
         [HttpGet]
+        [Authorize]
         public IActionResult AddReview(int CarId)
         {
             string clientId = _userManager.GetUserId(User);
@@ -28,6 +30,7 @@ namespace CarRental.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddReview(Review review)
         {
             reviewRepository.Add(review);

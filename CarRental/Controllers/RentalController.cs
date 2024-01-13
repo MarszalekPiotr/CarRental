@@ -1,7 +1,9 @@
 ﻿using CarRental.DataBase.Models;
 using CarRental.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace CarRental.Controllers
 {
@@ -19,6 +21,7 @@ namespace CarRental.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public IActionResult Rent(int CarId)
         {
             string clientId = _userManager.GetUserId(User);
@@ -30,6 +33,7 @@ namespace CarRental.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Rent(Rental rental)
         {    
             _rentalRepository.Add(rental);

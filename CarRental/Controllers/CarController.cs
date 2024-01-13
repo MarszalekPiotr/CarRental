@@ -1,7 +1,9 @@
 ﻿using CarRental.DataBase.Models;
 using CarRental.DTO;
 using CarRental.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -30,6 +32,7 @@ namespace CarRental.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int CarId)
         {
             _carRepository.DeleteCar(CarId);
@@ -83,6 +86,7 @@ namespace CarRental.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddCar()
         {
             return View(new AddCarDTO());
@@ -92,6 +96,7 @@ namespace CarRental.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddCar(AddCarDTO carDTO)
         {
             //var directory = "../CarRental/Views/Img/";
@@ -113,6 +118,62 @@ namespace CarRental.Controllers
             _carRepository.AddCar(car);
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdateCar(int CarId)
+        {
+            Car car = _carRepository.GetCarById(CarId);
+            ViewData["Car"] = car;
+            var carDto = new AddCarDTO()
+            {   Id = car.Id,
+                Brand = car.Brand,
+                Description = car.Description,
+                Colour = car.Colour,
+                Model = car.Model,
+                Year = car.Year,
+                Availability = car.Availability,
+            };
+            return View(carDto);
+        }
+
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdateCar(AddCarDTO carDTO)
+        {
+            //var directory = "../CarRental/Views/Img/";
+            var directory = "../CarRental/wwwroot/Img/";
+
+            Car oldCar = _carRepository.GetCarById(carDTO.Id);
+
+            string ImageTemp = oldCar.Image;
+            if (carDTO.Image != null) {
+                ImageTemp = SaveFile(carDTO.Image, directory).Result; /*  dodac zapisywanie na dysk  */ /*ToByteArray(carDTO.Image.OpenReadStream()),*/
+            }
+            
+
+            var carToUpdate = new Car()
+            {   Id =carDTO.Id,
+                Brand = carDTO.Brand,
+                Description = carDTO.Description,
+                Colour = carDTO.Colour,
+                Image = ImageTemp,    
+                Availability = carDTO.Availability,
+                Model = carDTO.Model,
+                Year = carDTO.Year,
+
+            };
+
+
+
+            _carRepository.Update(carToUpdate);
+            return RedirectToAction("Details", new {CarId = carDTO.Id});
+        }
+
+
+
+
 
 
 

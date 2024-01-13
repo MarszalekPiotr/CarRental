@@ -29,11 +29,17 @@ namespace CarRental.Repositories
 
         }
 
-        public int Update(Car car)
+        public int Update(Car carToUpdate)
         {
-            _context.Cars.Update(car);
+             _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Availability = carToUpdate.Availability;
+            _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Year = carToUpdate.Year;
+            _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Brand = carToUpdate.Brand;
+            _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Image = carToUpdate.Image;
+            _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Colour = carToUpdate.Colour;
+            _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Description = carToUpdate.Description;
+            _context.Cars.FirstOrDefault(C => C.Id == carToUpdate.Id).Model = carToUpdate.Model;
             _context.SaveChanges();
-            return car.Id;
+            return carToUpdate.Id;
         }
 
         public void ChangeAvailabilityForTrue(int carId)

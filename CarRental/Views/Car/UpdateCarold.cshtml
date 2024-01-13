@@ -1,0 +1,42 @@
+﻿@model CarRental.DTO.AddCarDTO
+@using Microsoft.Web.Helpers
+
+@{
+    ViewData["Title"] = "UpdateCar";
+    Car car = ViewBag.Car as Car;
+    Console.WriteLine();
+}
+
+
+
+
+<div>   </div>
+<h1 class="text-center mb-4">@ViewData["Title"]</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <form asp-action="UpdateCar">
+           @* <input type="hidden" asp-for="Id" class="form-control" />*@
+            <div style="display:none">
+                @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", @Value = car.Id} });
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Brand" class="form-control" id="Brand" />
+                <label asp-for="Brand">Brand</label>
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+
+        </form>
+
+        <div class="mt-4 text-center">
+            <a asp-action="CompanyPanel" class="btn btn-outline-primary">Wróć do listy twoich ofert</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
