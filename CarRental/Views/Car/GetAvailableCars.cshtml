@@ -24,9 +24,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Colour)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Availability)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.Image)
             </th>
@@ -51,20 +49,22 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Colour)
             </td>
+           
             <td>
-                @Html.DisplayFor(modelItem => item.Availability)
-            </td>
-            <td>
-                    <img src= "../Img/@item.Image">
+                    <img src= "../Img/@item.Image" width="200" height="100">
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit"  asp-route-id="@item.Id">Edit</a> |
+                    @Html.ActionLink("Szczegóły i recenzje", "Details","Car", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Usuń ", "Delete","Car", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+           @*      <a asp-action="AddReview" asp-controller = "Review" asp-route-id="@item.Id">Dodaj Opinie</a>*@
+                    @Html.ActionLink("Dodaj Opinie", "AddReview","Review", new { CarId = item.Id }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Wypożycz", "Rent","Rental", new { CarId = item.Id }, new { @class = "btn btn-primary" })
             </td>
+
         </tr>
             
         }

@@ -10,9 +10,11 @@ namespace CarRental.Controllers
     public class CarController : Controller
     {
         private readonly ICarRepository _carRepository;
-        public CarController(ICarRepository carRepository) 
-        { 
+        private readonly IReviewRepository _reviewRepository;
+        public CarController(ICarRepository carRepository, IReviewRepository reviewRepository)
+        {
             _carRepository = carRepository;
+            _reviewRepository = reviewRepository;
         }
         public IActionResult Index()
         {
@@ -28,10 +30,18 @@ namespace CarRental.Controllers
         }
 
         [HttpGet]
+        public IActionResult Delete(int CarId)
+        {
+            _carRepository.DeleteCar(CarId);
+            return RedirectToAction("GetAvailableCars");
+        }
+
+
+        [HttpGet]
         public IActionResult GetAvailableCars()
         {
 
-            var carsFromDb = _carRepository.GetAllCars();
+            var carsFromDb = _carRepository.GetAllCars().Where(c=> c.Availability == true).ToList();
             List<AvailableCarViewModel> carsForView = new List<AvailableCarViewModel>();
 
             carsFromDb.ForEach(c =>
@@ -54,6 +64,15 @@ namespace CarRental.Controllers
 
             return View(carsForView);
         }
+
+
+        public IActionResult Details(int CarId)
+        {
+            Car car =   _carRepository.GetCarById(CarId);
+            ViewData["Reviews"] = _reviewRepository.GetReviewsForCar(CarId);
+            return View(car);
+        }
+
 
       
        public Image byteArrayToImage(byte[] byteArrayIn)

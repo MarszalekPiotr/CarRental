@@ -7,6 +7,7 @@ using CarRental.DTO;
 using System.Reflection.Emit;
 using System.ComponentModel;
 using System.Xml;
+using Microsoft.Build.Execution;
 
 namespace CarRental.DataBase
 {
@@ -65,7 +66,17 @@ namespace CarRental.DataBase
                 .HasForeignKey(r => r.ClientId);
 
 
-     
+            // Cascade deleting
+            builder.Entity<Car>()
+                .HasMany(c => c.Rentals)
+                 .WithOne(r => r.Car)
+                 .OnDelete(DeleteBehavior.Cascade);
+
+           builder.Entity<Car>()
+                .HasMany(c => c.Reviews)
+                .WithOne(r => r.Car)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
 
 

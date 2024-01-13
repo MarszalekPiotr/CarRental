@@ -24,7 +24,7 @@ namespace CarRental.Repositories
 
         public List<Review> GetReviewsForCar(int carId)
         {
-            throw new NotImplementedException();
+            return _context.Reviews.Where(r => r.CarId == carId).ToList();
         }
     }
 }
